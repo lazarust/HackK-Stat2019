@@ -13,7 +13,7 @@ const options = [
 document.body.style = 'background: #465881;';
 
 const App = () => {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
   const [apiData, setApiData] = useState(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const App = () => {
                   value={selected && selected.label}
                   onChange={handleChange}
                   options={options}
-                  isClearable={true}
+                  isClearable={false}
                   theme={theme => ({
                       ...theme,
                       borderRadius: 0,
@@ -53,7 +53,7 @@ const App = () => {
            </Row>
           <Row>
               {apiData && Object.keys(apiData).map(item => {
-                      return <Col>{apiData[item]}</Col>
+                  return <Col style={{backgroundColor: `${apiData[item]}`}}><img src={`../static/${item}.png`}/></Col>
                     })
                   }
           </Row>
