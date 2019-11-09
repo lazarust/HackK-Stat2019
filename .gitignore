@@ -2,3 +2,5 @@
 */__pycache__/
 /mongo-volume
 */node_modules
+*/.cache/
+*/dist/
