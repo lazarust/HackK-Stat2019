@@ -15,9 +15,9 @@ services:
     react:
         build: ./frontend
         expose:
-          - 3000
+          - 1234
         ports:
-          - 3000:3000
+          - 1234:1234
         volumes:
           - ./frontend/src:/code/src
           - ./frontend/public:/code/public

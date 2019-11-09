@@ -5,18 +5,12 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://yoda:theforce@0.0.0.0:27017/minecraftapp"
 mongo = PyMongo(app)
 
-@app.route('/')
-def hello():
-    return 'bop'
-
 from flask import Flask
 import binascii
 import struct
 import requests
 import json
 from PIL import Image
-
-app = Flask(__name__)
 
 def get_rgb_values(pixel_value):
     red = pixel_value%256
@@ -26,8 +20,12 @@ def get_rgb_values(pixel_value):
     blue = pixel_value
     return [red,green,blue]
 
-#minecraft block data
 @app.route('/')
+def hello():
+    return 'bop'
+
+#minecraft block data
+@app.route('/colors/')
 def get_colors():
     mc_resp = requests.get('http://minecraft-ids.grahamedgecombe.com/items.json')
     block_data = json.loads(mc_resp.text)

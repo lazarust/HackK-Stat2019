@@ -8,4 +8,4 @@ ADD package.json /code/package.json
 WORKDIR /code
 
 RUN npm install
-CMD ["npm", "start"]
+CMD ["npm", "run", "server"]
