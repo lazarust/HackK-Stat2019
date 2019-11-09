@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Select from 'react-select';
@@ -14,14 +14,21 @@ document.body.style = 'background: #465881;';
 
 const App = () => {
   const [selected, setSelected] = useState(null);
+  const [apiData, setApiData] = useState(null);
 
+  useEffect(() => {
+      if(selected) {
+          const {value, label} = selected.selectedOption;
+          fetch(`http://0.0.0.0:4000/colors?block=${value}`)
+              .then(resp => resp.json())
+              .then(data => {
+                  setApiData(data)
+              });
+      }
+  }, [selected]);
   const handleChange = (selectedOption) => {
-    console.log(selectedOption)
     setSelected({ selectedOption })
-    fetch(`http://localhost:4000/colors?block=${selectedOption.value}`).then(resp => {
-      return resp.json()
-    }).then(data => console.log(data))
-  }
+  };
 
   return (
       <Container>
@@ -44,6 +51,12 @@ const App = () => {
                 />
                </Col>
            </Row>
+          <Row>
+              {apiData && Object.keys(apiData).map(item => {
+                      return <Col>{apiData[item]}</Col>
+                    })
+                  }
+          </Row>
       </Container>
   );
 }

@@ -11,10 +11,10 @@ import os
 from PIL import Image
 
 app = Flask(__name__)
-CORS(app, resources={r'*': {"origins": '*'}})
 app.config["MONGO_URI"] = "mongodb://yoda:theforce@0.0.0.0:27017/minecraftapp"
 mongo = PyMongo(app)
 ROOTDIR = os.path.dirname(os.path.abspath(__file__))
+cors = CORS(app)
 
 def get_rgb_values(pixel_value):
     red = pixel_value%256
@@ -96,7 +96,7 @@ def get_blocks_dict():
             image = Image.open(os.path.join(ROOTDIR, new_block['path']))
             rgbify = image.convert('RGB') # TODO: Get me the pixels pls
             new_block['color'] = rgbify
-            blocks.append(new_block)
+            blocks_list.append(new_block)
     blocks = mongo.blocks
     blocks.insert(blocks_list)
 
