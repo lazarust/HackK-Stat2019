@@ -6,9 +6,9 @@ import { Container, Row, Col } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
+  { value: '2-0', label: 'stone' },
+  { value: '1-0', label: 'grass' },
+  { value: '3-0', label: 'dirt' },
 ];
 document.body.style = 'background: #465881;';
 
@@ -16,9 +16,11 @@ const App = () => {
   const [selected, setSelected] = useState(null);
 
   const handleChange = (selectedOption) => {
-      console.log(selectedOption)
+    console.log(selectedOption)
     setSelected({ selectedOption })
-    console.log(`Option selected: ${selected}`)
+    fetch(`http://localhost:4000/colors?block=${selectedOption.value}`).then(resp => {
+      return resp.json()
+    }).then(data => console.log(data))
   }
 
   return (
