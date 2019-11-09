@@ -1,21 +1,25 @@
-version: '3'
+version: "3"
 services:
-    web:
-      build: .
-      ports:
-        - "5000:5000"
-    db:
-      image: "mongo"
-      environment:
-        - MONGO_INITDB_DATABASE=minecraftapp
-        - MONGO_INITDB_ROOT_USERNAME=yoda
-        - MONGO_INITDB_ROOT_PASSWORD=theforce
-      volumes:
-        - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-        - ./mongo-volume:/data/db
-      ports:
-        - '27017:27017'
-    node:
-        build: ./frontend
+    server:
+        build: ./server
+        expose:
+          - 4000
         ports:
-          - "3000:3000"
+          - 4000:4000
+        volumes:
+          - ./server:/code
+        environment:
+          - FLASK_ENV=development
+          - FLASK_APP=app.py
+          - FLASK_DEBUG=1
+    react:
+        build: ./frontend
+        expose:
+          - 3000
+        ports:
+          - 3000:3000
+        volumes:
+          - ./frontend/src:/code/src
+          - ./frontend/public:/code/public
+        links:
+          - "server:server"

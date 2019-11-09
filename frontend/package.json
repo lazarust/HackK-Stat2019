@@ -13,7 +13,7 @@
     "parcel": "^1.12.4"
   },
   "scripts": {
-    "start": "npx parcel build src/index.js"
+    "start": "parcel watch src/index.js --out-dir build"
   },
   "author": "",
   "license": "ISC"
