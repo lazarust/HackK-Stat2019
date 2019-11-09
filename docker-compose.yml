@@ -23,3 +23,14 @@ services:
           - ./frontend/public:/code/public
         links:
           - "server:server"
+    mongo:
+        image: "mongo"
+        environment:
+          - MONGO_INITDB_DATABASE=minecraftapp
+          - MONGO_INITDB_ROOT_USERNAME=yoda
+          - MONGO_INITDB_ROOT_PASSWORD=theforce
+        volumes:
+          - ./init-mongo.js:/src/init-mongo.js:ro
+          - ./mongo-volume:/data/db
+        ports:
+          - 27017:27017

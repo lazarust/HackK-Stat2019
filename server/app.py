@@ -7,13 +7,14 @@ import binascii
 import struct
 import requests
 import json
+import os
 from PIL import Image
 
 app = Flask(__name__)
 CORS(app, resources={r'*': {"origins": '*'}})
 app.config["MONGO_URI"] = "mongodb://yoda:theforce@0.0.0.0:27017/minecraftapp"
 mongo = PyMongo(app)
-
+ROOTDIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_rgb_values(pixel_value):
     red = pixel_value%256
@@ -83,6 +84,21 @@ def get_colors():
         json_response[f"{block[0]['type']}-{block[0]['meta']}"] = '#%02x%02x%02x' % tuple(get_rgb_values(pixel_val))
 
     return json.dumps(json_response)
+
+def get_blocks_dict():
+    blocks_list = []
+    for dir, subdir, files in os.walk(os.path.join(ROOTDIR, 'api/static')):
+        for fname in files:
+            new_block = {
+                'name': fname.replace('.png', ''),
+                'path': f'api/static/{fname}'
+            }
+            image = Image.open(os.path.join(ROOTDIR, new_block['path']))
+            rgbify = image.convert('RGB') # TODO: Get me the pixels pls
+            new_block['color'] = rgbify
+            blocks.append(new_block)
+    blocks = mongo.blocks
+    blocks.insert(blocks_list)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="4000", debug=True)
