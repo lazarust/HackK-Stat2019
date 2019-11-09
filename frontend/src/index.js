@@ -3,23 +3,38 @@ import ReactDOM from 'react-dom';
 import './index.css';
 //import App from './App';
 import * as serviceWorker from './serviceWorker';
+import Select from 'react-select';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
+];
 
 class App extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            list :[
-                "Air", "Stone","Granite","Polished Granite","Diorite","Polished Diorite","Andesite","Polished Andesite","Grass","Dirt","Coarse Dirt","Podzol","Cobblestone","Oak Wood Plank",
-                "Spruce Wood Plank","Birch Wood Plank","Jungle Wood Plank","Acacia Wood Plank","Dark Oak Wood Plank","Oak Sapling","Spruce Sapling"]
-        }
-    };
-   render() {
-        return (
-            <List items={this.state.list} />
-        );
+     state = {
+    selectedOption: null,
+  };
+  handleChange = selectedOption => {
+    this.setState(
+      { selectedOption },
+      () => console.log(`Option selected:`, this.state.selectedOption)
+    );
+  };
+  render() {
+    const { selectedOption } = this.state;
+
+    return (
+      <Select
+        value={selectedOption}
+        onChange={this.handleChange}
+        options={options}
+      />
+    );
   }
 }
 
+/*
 class List extends React.Component {
     constructor(props) {
         super(props);
@@ -27,6 +42,7 @@ class List extends React.Component {
             filtered: []
         }
         this.handleChange = this.handleChange.bind(this);
+
 
     }
     componentDidMount() {
@@ -81,11 +97,12 @@ class List extends React.Component {
                     <section className="section">
                         <div>
                             <input type="text" className="input" onChange={this.handleChange} placeholder="Search..." />
-                            <ul>
+                            <select>
                                  {this.state.filtered.map(item => (
-                                    <li key={item}>{item}</li>
+                                    <option key={item}>{item}</option>
                                     ))}
-                            </ul>
+                            </select>
+                            <SelectSearch options={options} value="sv" name="language" placeholder="Choose your language" />
                         </div>
 \
                     </section>
@@ -94,6 +111,7 @@ class List extends React.Component {
         )
     }
 }
+*/
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
