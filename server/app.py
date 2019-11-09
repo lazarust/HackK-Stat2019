@@ -3,19 +3,17 @@ from flask import request
 from flask_pymongo import PyMongo
 from flask_cors import CORS
 import os.path
-
-
-app = Flask(__name__)
-CORS(app, resources=r'/*')
-app.config["MONGO_URI"] = "mongodb://yoda:theforce@0.0.0.0:27017/minecraftapp"
-mongo = PyMongo(app)
-
-from flask import Flask
 import binascii
 import struct
 import requests
 import json
 from PIL import Image
+
+app = Flask(__name__)
+CORS(app, resources={r'*': {"origins": '*'}})
+app.config["MONGO_URI"] = "mongodb://yoda:theforce@0.0.0.0:27017/minecraftapp"
+mongo = PyMongo(app)
+
 
 def get_rgb_values(pixel_value):
     red = pixel_value%256
@@ -27,8 +25,7 @@ def get_rgb_values(pixel_value):
 
 @app.route('/', methods=['GET'])
 def hello():
-    file = os.join(root_dir)
-    return
+    return 'boop'
 
 #minecraft block data
 @app.route('/colors/', methods=['GET'])
