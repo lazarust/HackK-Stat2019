@@ -11,6 +11,7 @@ import os
 import numpy as np
 import pandas as pd
 from PIL import Image
+import operator
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://yoda:theforce@0.0.0.0:27017/minecraftapp"
@@ -29,6 +30,11 @@ def get_character_from_json(character):
         if str(c).lower() == str(character).lower():
             character = characters[c] # control is now json for posted character
     return character
+
+def get_all_characters():
+    f = open('characters.json', 'r')
+    characters = json.load(f)
+    return characters
 
 def get_characters(control_name, opponent_name):
     control = get_character_from_json(control_name)
@@ -81,12 +87,26 @@ def compare(attack_set):
     control = attack_set[0]
     opponent = attack_set[1]
 
-    print(control)
-    print(opponent)
-
     control['win'] = np.where(control.totalframes < opponent.totalframes, 'yes', 'no')
+    control['diff'] = np.where(control.totalframes != opponent.totalframes, control.totalframes.astype(int) - opponent.totalframes.astype(int), 0)
 
     return control.to_json()
+
+@app.route('/threats/', methods=['GET'])
+def weakest_strongest():
+    control_name = request.args.get('control')
+    char_power = {}
+    for c in get_all_characters():
+        if str(c).lower() != control_name:
+            resp = 0
+            try:
+                resp = compare(get_characters(control_name, str(c).lower()))
+                char_power[c] = sum(json.loads(resp)['diff'].values())
+            except:
+                break
+
+    char_power = sorted(char_power.items(), key=operator.itemgetter(1))
+    return json.dumps({'weakest':char_power[0], 'strongest':char_power[len(char_power) - 1]})
 
 @app.route('/compare/', methods=['GET'])
 def get_battle():
@@ -94,12 +114,6 @@ def get_battle():
     opponent_name = request.args.get('opponent')
     #look for character in dataset somehow..
     return(compare(get_characters(control_name, opponent_name)))
-
-def weakness_search():
-    #take move type
-    control = request.args.get('character')
-    pass
-
 
 def get_rgb_values(pixel_value):
     red = pixel_value%256
